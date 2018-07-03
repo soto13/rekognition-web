@@ -37,7 +37,7 @@ class AlertDialogSlide extends React.Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description" >
 
-          <DialogTitle id="alert-dialog-slide-title"> {"¿Deseas subir ésta foto?"} </DialogTitle>
+          <DialogTitle id="alert-dialog-slide-title"> <p style={{ textAlign: 'center' }} >¿Deseas subir ésta foto?</p> </DialogTitle>
 
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
@@ -46,12 +46,7 @@ class AlertDialogSlide extends React.Component {
           </DialogContent>
           
           <DialogActions>
-            <Button onClick={ this.handleClose } color="primary">
-              Disagree
-            </Button>
-            <Button onClick={ this.handleClose } color="primary">
-              Agree
-            </Button>
+            <Button onClick={ this.handleClose } color="primary">CERRAR</Button>
           </DialogActions>
 
         </Dialog>

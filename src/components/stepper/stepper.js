@@ -66,27 +66,55 @@ class Stepper extends React.Component {
       case 0:
         return (
           <div key={step} >
-            <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={ (e) => this.uploadPhoto(e) } />
-            <label htmlFor="icon-button-file">
-              <IconButton color="primary" className={classes.button} component="span">
-                <PhotoCamera />
-              </IconButton>
-            </label>
-            { imageBase64 && (<img className={classes.img} src={imageBase64} alt='images' />) }
+            <div className='row' >
+              <div className='col-xs-12' >
+                { imageBase64 && (<img className={classes.img} src={imageBase64} alt='images' />) }
+              </div>
+            </div>
+            <div className='row' >
+              <div className='col-xs-12 col-sm-offset-5 col-sm-2' >
+                <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={ (e) => this.uploadPhoto(e) } />
+                <label htmlFor="icon-button-file">
+                  <IconButton color="primary" className={classes.button} component="span">
+                    <PhotoCamera />
+                  </IconButton>
+                </label>
+              </div>
+            </div>
           </div>
         );
       case 1:
         return (
           <div key={step} >
-            <Webcam audio={ false } width={ 600 } height={ 300 } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
-            <Button variant="fab" color="primary" aria-label="edit" className={ classes.button } onClick={ this.capture.bind(this, !openDialog) } > <Icon className={ classes.icon } >add_circle</Icon> </Button>
-            { photo && (<AlertDialogSlide photo={ photo } open={ openDialog } />) }
+            <div className='row' >
+              <div className='col-xs-12' >
+                <Webcam audio={ false } width={ 600 } height={ 300 } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
+              </div>
+            </div>
+            <div className='row' >
+              <div className='col-xs-12 col-sm-offset-5 col-sm-2' >
+                <Button variant="fab" color="primary" aria-label="edit" className={ classes.button } onClick={ this.capture.bind(this, !openDialog) } > <Icon className={ classes.icon } >add_circle</Icon> </Button>
+              </div>
+            </div>
+            <div className='row' >
+              <div className='col-xs-12 col-sm-offset-5 col-sm-4' >
+                { photo && (<AlertDialogSlide photo={ photo } open={ openDialog } />) }
+              </div>
+            </div>
           </div>
         );
       case 2:
         return (
           <div key={step} >
-            <h1>Resultado es</h1>
+            <div className='row' >
+              <div className='col-xs-12' >
+                <h1>Resultado es</h1>
+              </div>
+            </div>
+            <div className='row' >
+              <div className='col-xs-12' >
+              </div>
+            </div>
           </div>
         );
       default:

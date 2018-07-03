@@ -1,32 +1,43 @@
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React, { Component } from "react";
-import Webcam from "react-webcam";
+import { Stepper } from "../../../components";
 
 class CompareFacesComponent extends Component {
 
-  constructor(props) {
-    super(props)
-  }
-
-  setRef = (webcam) => {
-    this.webcam = webcam;
-  }
- 
-  capture = () => {
-    const imageSrc = this.webcam.getScreenshot();
-    console.log(imageSrc)
-  };
-
   render() {
-    const videoConstraints = { width: 1280, height: 720, facingMode: 'user', };
 
     return (
       <div>
-        <h1>Comparar caras</h1>
-        <Webcam audio={ false } height={ 350 } ref={ this.setRef } screenshotFormat="image/jpeg" width={ 350 } videoConstraints={ videoConstraints } />
-        <button onClick={ this.capture }>Capture photo</button>
+        <div className='row' >
+          <div className='col-xs-offset-3 col-sm-offset-5'>
+            <h1>Comparar similitud</h1>
+          </div>
+        </div>
+        <div className='row' >
+          <div className='col-xs-12'>
+            <Stepper />
+          </div>
+        </div>
       </div>
     )
   }
 }
 
-export default CompareFacesComponent;
+CompareFacesComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  icon: {
+    color: '#fffff'
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
+  },
+});
+
+export default  withStyles(styles)(CompareFacesComponent);

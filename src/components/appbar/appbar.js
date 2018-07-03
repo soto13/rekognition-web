@@ -68,7 +68,7 @@ class AppBars extends Component {
 				<AppBar position="static" className={classes.backgroundColor} >
 					<Toolbar>
             <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={this.toggleDrawer('left', true)} ><MenuIcon /></IconButton>
-						<Typography variant="title" color="inherit" className={classes.flex}><Link className={ classes.link } style={{ textDecoration: 'none' }} title='Compañías' to="/jspanel/table">{ title }</Link></Typography>
+						<Typography variant="title" color="inherit" className={classes.flex}><Link className={ classes.link } style={{ textDecoration: 'none' }} title='Compañías' to="/">{ title }</Link></Typography>
 						<Button color="inherit" >Recognition</Button>
 					</Toolbar>
 				</AppBar>

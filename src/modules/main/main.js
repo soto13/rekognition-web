@@ -4,7 +4,7 @@ class MainModule extends Component {
   render() {
     return (
       <div>
-        <h1>Hola</h1>
+        <h1>Bienvenido a nuestro API</h1>
       </div>
     )
   }

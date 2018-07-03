@@ -98,7 +98,7 @@ class Stepper extends React.Component {
             </div>
             <div className='row' >
               <div className='col-xs-12 col-sm-offset-5 col-sm-4' >
-                { photo && (<AlertDialogSlide photo={ photo } open={ openDialog } />) }
+                { photo && (<AlertDialogSlide sourceImage={ photo } targetImage={ imageBase64 } open={ openDialog } />) }
               </div>
             </div>
           </div>

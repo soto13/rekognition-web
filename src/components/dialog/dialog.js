@@ -12,7 +12,7 @@ import React from 'react';
 class AlertDialogSlide extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { open: false, };
+    this.state = { open: false, sourceImage: '', targetImage: '' };
   }
 
   handleClickOpen = () => {
@@ -22,9 +22,23 @@ class AlertDialogSlide extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+  
+  uploadImage = () => {
+    const { sourceImage, targetImage } = this.props;
+    let imageSource = '';
+    let imageTarget = '';
+    imageSource = sourceImage;
+    imageTarget = targetImage;
+    imageSource = imageSource.replace("data:image/jpeg;base64,", '');
+    imageTarget = imageTarget.replace("data:image/jpeg;base64,", '');
+
+    // console.log(imageSource, imageTarget)
+
+    this.setState({ open: false, sourceImage: imageSource, targetImage, imageTarget });
+  }
 
   render() {
-    const { photo, classes } = this.props;
+    const { sourceImage, classes } = this.props;
     const { open } = this.state;
 
     return (
@@ -41,12 +55,13 @@ class AlertDialogSlide extends React.Component {
 
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              <img className={ styles.img } src={photo} alt='images' />
+              <img className={ styles.img } src={sourceImage} alt='images' />
             </DialogContentText>
           </DialogContent>
           
           <DialogActions>
             <Button onClick={ this.handleClose } color="primary">CERRAR</Button>
+            <Button onClick={ this.uploadImage } color="primary">Subir</Button>
           </DialogActions>
 
         </Dialog>

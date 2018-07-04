@@ -4,9 +4,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
+import Snackbar from '@material-ui/core/Snackbar';
 import { withStyles } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { ADD_OBJECT, COMPARE_FACES, CREATE_BUCKET } from "../../endpoints";
@@ -15,15 +17,28 @@ import { ADD_OBJECT, COMPARE_FACES, CREATE_BUCKET } from "../../endpoints";
 class AlertDialogSlide extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { open: false, sourceImage: '', targetImage: '' };
+    this.state = { open: false, sourceImage: '', targetImage: '', openSnackBar: false, };
   }
 
   handleClickOpen = () => {
     this.setState({ open: true });
   };
-
+  
   handleClose = () => {
+    this.handleClick();
     this.setState({ open: false });
+  };
+
+  handleClick = () => {
+    this.setState({ openSnackBar: true });
+  };
+
+  handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ openSnackBar: false });
   };
   
   createBucket = (bucketName, sourceName, targetName) => {
@@ -103,12 +118,37 @@ class AlertDialogSlide extends React.Component {
 
   LongTextSnackbar = () => {
     const { classes } = this.props;
+    const { openSnackBar } = this.state;
+    console.log(openSnackBar)
 
-    const action = (<Button color="secondary" size="small">lorem ipsum dolorem</Button>);
-  
     return (
       <div>
-        <SnackbarContent className={classes.snackbar} message="I love candy. I love cookies. I love cupcakes." action={ action } />
+        <Snackbar anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={openSnackBar}
+          autoHideDuration={6000}
+          onClose={this.handleCloseSnackBar}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">Note archived</span>}
+          action={[
+            <Button key="undo" color="secondary" size="small" onClick={this.handleCloseSnackBar}>
+              UNDO
+            </Button>,
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleCloseSnackBar}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </div>
     );
   }
@@ -163,6 +203,10 @@ const styles = theme => ({
   },
   snackbar: {
     margin: theme.spacing.unit,
+  },
+  close: {
+    width: theme.spacing.unit * 4,
+    height: theme.spacing.unit * 4,
   },
 });
 

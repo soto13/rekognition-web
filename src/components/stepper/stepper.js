@@ -3,8 +3,10 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
@@ -15,7 +17,7 @@ import Webcam from "react-webcam";
 import AlertDialogSlide from "../dialog/dialog";
 
 class Stepper extends React.Component {
-  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false, compareFacesResponse: {}, similarity: {} };
+  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false, compareFacesResponse: {}, similarity: {}, openSnackBar: false, };
   
   handleNext = () => {
     this.setState(prevState => ({
@@ -27,6 +29,18 @@ class Stepper extends React.Component {
     this.setState(prevState => ({
       activeStep: prevState.activeStep - 1,
     }));
+  };
+
+  handleClick = () => {
+    this.setState({ openSnackBar: true });
+  };
+
+  handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ openSnackBar: false });
   };
 
   handleStepChange = activeStep => {
@@ -98,7 +112,7 @@ class Stepper extends React.Component {
             </div>
             <div className='row' >
               <div className='col-xs-12 col-sm-offset-3 col-sm-10' >
-                { photo && (<AlertDialogSlide sourceImage={ photo } targetImage={ imageBase64 } open={ openDialog } onChange={ (event) => this.setState({ compareFacesResponse: event.compareFaces, similarity: event.similarity }) } />) }
+                { photo && (<AlertDialogSlide sourceImage={ photo } targetImage={ imageBase64 } open={ openDialog } onChange={ (event) => this.getDataFromDialog(event) } />) }
               </div>
             </div>
           </div>
@@ -106,6 +120,45 @@ class Stepper extends React.Component {
       default:
         return (<div key={step} ><h1>Step desconocido</h1></div>);
     }
+  }
+
+  getDataFromDialog = (event) => {
+    this.handleClick()
+    this.setState({ compareFacesResponse: event.compareFaces, similarity: event.similarity })
+  }
+
+  LongTextSnackbar = () => {
+    const { classes } = this.props;
+    const { openSnackBar, similarity } = this.state;
+
+    return (
+      <div>
+        <Snackbar anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={openSnackBar}
+          autoHideDuration={6000}
+          onClose={this.handleCloseSnackBar}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{ similarity.message }</span>}
+          action={[
+            <Button key="undo" color="secondary" size="small" onClick={this.handleCloseSnackBar}>CERRAR</Button>,
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleCloseSnackBar}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </div>
+    );
   }
 
   render() {
@@ -142,6 +195,7 @@ class Stepper extends React.Component {
                 </Button>
               }
               />
+              { this.LongTextSnackbar() }
           </div>
         </div>
       </div>
@@ -190,6 +244,10 @@ const styles = theme => ({
   },
   input: {
     display: 'none',
+  },
+  close: {
+    width: theme.spacing.unit * 4,
+    height: theme.spacing.unit * 4,
   },
 });
 

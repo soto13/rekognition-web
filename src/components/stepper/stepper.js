@@ -15,7 +15,7 @@ import Webcam from "react-webcam";
 import AlertDialogSlide from "../dialog/dialog";
 
 class Stepper extends React.Component {
-  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false };
+  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false, compareFacesResponse: {}, similarity: {} };
   
   handleNext = () => {
     this.setState(prevState => ({
@@ -97,22 +97,8 @@ class Stepper extends React.Component {
               </div>
             </div>
             <div className='row' >
-              <div className='col-xs-12 col-sm-offset-5 col-sm-4' >
-                { photo && (<AlertDialogSlide sourceImage={ photo } targetImage={ imageBase64 } open={ openDialog } />) }
-              </div>
-            </div>
-          </div>
-        );
-      case 2:
-        return (
-          <div key={step} >
-            <div className='row' >
-              <div className='col-xs-12' >
-                <h1>Resultado es</h1>
-              </div>
-            </div>
-            <div className='row' >
-              <div className='col-xs-12' >
+              <div className='col-xs-12 col-sm-offset-3 col-sm-10' >
+                { photo && (<AlertDialogSlide sourceImage={ photo } targetImage={ imageBase64 } open={ openDialog } onChange={ (event) => this.setState({ compareFacesResponse: event.compareFaces, similarity: event.similarity }) } />) }
               </div>
             </div>
           </div>
@@ -171,11 +157,7 @@ const tutorialSteps = [
   {
     label: 'Tómate una foto',
     imgPath: '/static/images/steppers/2-work.jpg',
-  },
-  {
-    label: 'El resultado es',
-    imgPath: '/static/images/steppers/3-friends.jpg',
-  },
+  }
 ];
 
 

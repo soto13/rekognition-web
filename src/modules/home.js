@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AppBars, FooterComponent } from '../components';
+import { AppBars } from '../components';
 import Main from '../routes/routes';
 import './home.css';
 
@@ -15,7 +15,6 @@ export default class HomeComponent extends Component {
 						</div>
 					</div>
 				</div>
-				<FooterComponent />
 			</div>
     )
   }

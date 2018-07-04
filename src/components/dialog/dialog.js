@@ -5,9 +5,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { ADD_OBJECT, COMPARE_FACES, CREATE_BUCKET } from "../../endpoints";
+
 
 class AlertDialogSlide extends React.Component {
   constructor(props) {
@@ -23,6 +26,67 @@ class AlertDialogSlide extends React.Component {
     this.setState({ open: false });
   };
   
+  createBucket = (bucketName, sourceName, targetName) => {
+    const body = JSON.stringify({ bucketName });
+
+    fetch(CREATE_BUCKET, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }, body })
+      .then((res) => res.json())
+      .then((bucket) => {
+        this.createObjectSource(bucketName, sourceName, targetName);
+        return bucket;
+      })
+      .catch((err) => {
+        return err;
+      })
+  }
+
+  createObjectSource = (bucketName, sourceName, targetName) => {
+    const source = 'user.jpg';
+    const bodySource = JSON.stringify({ bucketName, keyName: source, fileBase64: sourceName });
+
+    fetch(ADD_OBJECT, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }, body: bodySource })
+      .then((res) => res.json())
+      .then((object) => {
+        this.createObjectTarget(bucketName, source, targetName);
+        return object;
+      })
+      .catch((err) => {
+        return err;
+      })
+  }
+
+  createObjectTarget = (bucketName, sourceName, targetName) => {
+    const target = 'cedula.jpg';
+    const bodyTarget = JSON.stringify({ bucketName, keyName: target, fileBase64: targetName });
+
+    fetch(ADD_OBJECT, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }, body: bodyTarget })
+      .then((res) => res.json())
+      .then((object) => {
+        this.compareFaces(bucketName, sourceName, target);
+        return object;
+      })
+      .catch((err) => {
+        return err;
+      })
+  }
+
+  compareFaces = (bucketName, sourceName, targetName) => {
+    const body = JSON.stringify({ bucketName, sourceName, targetName });
+    fetch(COMPARE_FACES, { method: 'post', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }, body })
+      .then((res) => res.json())
+      .then((faceCompared) => {
+        if (faceCompared.FaceMatches.length > 0) {
+          this.props.onChange({ compareFaces: faceCompared, similarity: { message: `se encontró similitud en un ${faceCompared.FaceMatches[0].Similarity}%`, detail: faceCompared.FaceMatches } })
+        } else {
+          this.props.onChange({ compareFaces: faceCompared, similarity: { message: 'no se encontraron similitudes', detail: faceCompared.UnmatchedFaces } })
+        }
+        return faceCompared;
+      })
+      .catch((err) => {
+        return err;
+      })
+  }
+    
   uploadImage = () => {
     const { sourceImage, targetImage } = this.props;
     let imageSource = '';
@@ -33,17 +97,30 @@ class AlertDialogSlide extends React.Component {
     imageTarget = imageTarget.replace("data:image/jpeg;base64,", '');
 
     // console.log(imageSource, imageTarget)
-
+    this.createBucket("josesotoibarra503980211", imageSource, imageTarget);
     this.setState({ open: false, sourceImage: imageSource, targetImage, imageTarget });
   }
 
+  LongTextSnackbar = () => {
+    const { classes } = this.props;
+
+    const action = (<Button color="secondary" size="small">lorem ipsum dolorem</Button>);
+  
+    return (
+      <div>
+        <SnackbarContent className={classes.snackbar} message="I love candy. I love cookies. I love cupcakes." action={ action } />
+      </div>
+    );
+  }
+    
   render() {
     const { sourceImage, classes } = this.props;
     const { open } = this.state;
 
     return (
-      <div>
+      <div className={ classes.root } >
         <Button variant="outlined" href="#outlined-buttons" className={ classes.button } onClick={ this.handleClickOpen } >Ver Foto</Button>
+        <Button variant="outlined" href="#outlined-buttons" className={ classes.button } onClick={ this.uploadImage } >Comprobar resultados</Button>
         <Dialog open={ open }
           TransitionComponent={ Transition }
           keepMounted
@@ -55,7 +132,7 @@ class AlertDialogSlide extends React.Component {
 
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              <img className={ styles.img } src={sourceImage} alt='images' />
+              <img className={ classes.img } src={sourceImage} alt='images' />
             </DialogContentText>
           </DialogContent>
           
@@ -65,12 +142,16 @@ class AlertDialogSlide extends React.Component {
           </DialogActions>
 
         </Dialog>
+          { this.LongTextSnackbar() }
       </div>
     );
   }
 }
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
   button: {
     margin: theme.spacing.unit,
   },
@@ -79,7 +160,10 @@ const styles = theme => ({
     maxWidth: 400,
     overflow: 'hidden',
     width: '100%',
-  }
+  },
+  snackbar: {
+    margin: theme.spacing.unit,
+  },
 });
 
 function Transition(props) {

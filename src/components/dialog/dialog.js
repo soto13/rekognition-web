@@ -4,41 +4,24 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
-import Snackbar from '@material-ui/core/Snackbar';
 import { withStyles } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { ADD_OBJECT, COMPARE_FACES, CREATE_BUCKET } from "../../endpoints";
 
-
 class AlertDialogSlide extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { open: false, sourceImage: '', targetImage: '', openSnackBar: false, };
+    this.state = { open: false, sourceImage: '', targetImage: '' };
   }
 
   handleClickOpen = () => {
     this.setState({ open: true });
   };
-  
+
   handleClose = () => {
-    this.handleClick();
     this.setState({ open: false });
-  };
-
-  handleClick = () => {
-    this.setState({ openSnackBar: true });
-  };
-
-  handleCloseSnackBar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    this.setState({ openSnackBar: false });
   };
   
   createBucket = (bucketName, sourceName, targetName) => {
@@ -115,43 +98,6 @@ class AlertDialogSlide extends React.Component {
     this.createBucket("josesotoibarra503980211", imageSource, imageTarget);
     this.setState({ open: false, sourceImage: imageSource, targetImage, imageTarget });
   }
-
-  LongTextSnackbar = () => {
-    const { classes } = this.props;
-    const { openSnackBar } = this.state;
-    console.log(openSnackBar)
-
-    return (
-      <div>
-        <Snackbar anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={openSnackBar}
-          autoHideDuration={6000}
-          onClose={this.handleCloseSnackBar}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">Note archived</span>}
-          action={[
-            <Button key="undo" color="secondary" size="small" onClick={this.handleCloseSnackBar}>
-              UNDO
-            </Button>,
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={this.handleCloseSnackBar}
-            >
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-      </div>
-    );
-  }
     
   render() {
     const { sourceImage, classes } = this.props;
@@ -182,7 +128,6 @@ class AlertDialogSlide extends React.Component {
           </DialogActions>
 
         </Dialog>
-          { this.LongTextSnackbar() }
       </div>
     );
   }
@@ -200,14 +145,7 @@ const styles = theme => ({
     maxWidth: 400,
     overflow: 'hidden',
     width: '100%',
-  },
-  snackbar: {
-    margin: theme.spacing.unit,
-  },
-  close: {
-    width: theme.spacing.unit * 4,
-    height: theme.spacing.unit * 4,
-  },
+  }
 });
 
 function Transition(props) {

@@ -95,7 +95,7 @@ class AlertDialogSlide extends React.Component {
     imageTarget = imageTarget.replace("data:image/jpeg;base64,", '');
 
     // console.log(imageSource, imageTarget)
-    this.createBucket("josesotoibarra503980211", imageSource, imageTarget);
+    this.createBucket("userfake2018", imageSource, imageTarget);
     this.setState({ open: false, sourceImage: imageSource, targetImage, imageTarget });
   }
     
@@ -124,7 +124,7 @@ class AlertDialogSlide extends React.Component {
           
           <DialogActions>
             <Button onClick={ this.handleClose } color="primary">CERRAR</Button>
-            <Button onClick={ this.uploadImage } color="primary">Subir</Button>
+            <Button onClick={ this.uploadImage } color="primary">SUBIR</Button>
           </DialogActions>
 
         </Dialog>

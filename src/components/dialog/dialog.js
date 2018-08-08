@@ -118,7 +118,7 @@ class AlertDialogSlide extends React.Component {
 
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              <img className={ classes.img } src={sourceImage} alt='images' />
+              <img className={ classes.img } src={ sourceImage } alt='images' />
             </DialogContentText>
           </DialogContent>
           

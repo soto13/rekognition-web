@@ -3,6 +3,7 @@ import { DeleteForever, Send } from '@material-ui/icons';
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { ListFaceComponent, WebcamComponent } from '../../../components';
+import { FACE_BASE64 } from '../../../endpoints';
 
 class FaceComponent extends Component {
 
@@ -27,7 +28,15 @@ class FaceComponent extends Component {
   }
 
   getLabelsFromFace = () => {
-    //
+    const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', };
+    const body = JSON.stringify({ image: this.convertImage64ToFileInBase64() })
+    fetch(FACE_BASE64, { method: 'POST', headers, body })
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({ metadatas: data.FaceDetails })
+        return data;
+      })
+      .catch(err => console.log(err));
   }
 
   customCard = () => {
@@ -47,7 +56,7 @@ class FaceComponent extends Component {
                 </IconButton>
               </div>
               <div className='col-xs-offset-6 col-xs-2'>
-                <IconButton color="primary" className={ classes.button } component="span">
+                <IconButton color="primary" className={ classes.button } onClick={ this.getLabelsFromFace } component="span">
                   <Send />
                 </IconButton>
               </div>
@@ -59,7 +68,7 @@ class FaceComponent extends Component {
   } 
 
   render() {
-    const { imageBase64 } = this.state;
+    const { imageBase64, metadatas } = this.state;
 
     return (
       <div className='row'>
@@ -74,7 +83,7 @@ class FaceComponent extends Component {
         </div>
         <div className='col-xs-4'>
           <div className='center-xs' >
-            <ListFaceComponent/>
+            <ListFaceComponent metadatas={ metadatas } />
           </div>
         </div>
       </div>

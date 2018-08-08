@@ -26,6 +26,10 @@ class FaceComponent extends Component {
     this.setState({ imageBase64: '' });
   }
 
+  getLabelsFromFace = () => {
+    //
+  }
+
   customCard = () => {
     const { classes } = this.props;
     const { imageBase64 } = this.state;

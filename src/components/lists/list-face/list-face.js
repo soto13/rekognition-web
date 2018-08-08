@@ -1,34 +1,52 @@
 import { List, ListItem, ListItemText, ListSubheader, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { identifierData } from '../../../utils';
+import { identifierData, values } from '../../../utils';
 
 class ListFaceComponent extends Component {
+  
+  getNecessaryData = (datas) => {
+    let newData = {}
+    for (const data in datas) {
+      if (data === 'Quality' || data === 'Pose' || data === 'Landmarks' || data === 'Confidence' || data === 'BoundingBox') {} else {
+        newData[data] = datas[data];
+      }
+    }
+    return newData;
+  }
 
   getDataFromObject = (datas) => {
     const { classes } = this.props;
+    const newData = this.getNecessaryData(datas);
     let NameOfData = [];
     let counter = 0;
-    for (const data in datas) {
-      if (data === 'Quality' || data === 'Pose' || data === 'Landmarks' || data === 'Confidence' || data === 'BoundingBox') {
-        console.log('entre', identifierData[data])
-        NameOfData.push((
-          <ul key={ counter } className={ classes.ul }>
-            <ListSubheader>{ identifierData[data] }</ListSubheader>
-            { (data !== 'Emotions') && (
+    for (const data in newData) {
+      NameOfData.push((
+        <ul key={ counter } className={ classes.ul }>
+          <ListSubheader>{ identifierData[data] }</ListSubheader>
+          { (data !== 'Emotions') && (data !== 'AgeRange') && (
+            <div>
               <ListItem>
-                <ListItemText primary={`Item ${datas[data].Value}`} />
+                <ListItemText primary={`${values[datas[data].Value]}`}> hola</ListItemText>
               </ListItem>
-            ) }
-            { (data === 'Emotions') && datas[data].map((item, key) => (
-              <ListItem key={ key }>
-                <ListItemText primary={`Item ${item}`} />
+              <ListItem>
+                <ListItemText primary={`Confidencialidad ${datas[data].Confidence}%`} />
               </ListItem>
-            )) }
-          </ul>
-        ));
-        counter += 1;
-      } else { console.log('no entre') }
+            </div>
+          ) }
+          { (data === 'Emotions') && datas[data].map((item, key) => (
+            <ListItem key={ key }>
+              <ListItemText primary={`Item ${item}`} />
+            </ListItem>
+          )) }
+          { (data === 'AgeRange') && (
+            <ListItem>
+            <ListItemText primary={`Rango de edad entre ${datas[data].Low} y ${datas[data].High} años`} />
+          </ListItem>
+          ) }
+        </ul>
+      ));
+      counter += 1;
     }
     return NameOfData;
   }

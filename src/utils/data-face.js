@@ -16,4 +16,11 @@ const identifierData = {
   Confidence: 'Confidencialidad'
 }
 
-export { identifierData };
+const values = {
+  true: 'Si hay contenido',
+  false: 'No hay contenido',
+  Male: 'Masculino',
+  Female: 'Femenino'
+}
+
+export { identifierData, values };

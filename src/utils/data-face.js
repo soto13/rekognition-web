@@ -23,4 +23,15 @@ const values = {
   Female: 'Femenino'
 }
 
-export { identifierData, values };
+const emotions = {
+  HAPPY: 'Feliz',
+  SAD: 'Triste',
+  ANGRY: 'Enojado',
+  CONFUSED: 'Confundido',
+  DISGUSTED: 'Disgustado',
+  SURPRISED: 'Sorprendido',
+  CALM: 'Calmado',
+  UNKNOWN: 'Desconocido'
+}
+
+export { identifierData, values, emotions };

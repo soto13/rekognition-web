@@ -1,3 +1,3 @@
-import { identifierData, values } from './data-face';
+import { emotions, identifierData, values } from './data-face';
 
-export { identifierData, values };
+export { emotions, identifierData, values };

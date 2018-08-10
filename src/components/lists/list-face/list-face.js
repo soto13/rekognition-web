@@ -1,7 +1,7 @@
 import { List, ListItem, ListItemText, ListSubheader, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { identifierData, values } from '../../../utils';
+import { emotions, identifierData, values } from '../../../utils';
 
 class ListFaceComponent extends Component {
   
@@ -13,6 +13,10 @@ class ListFaceComponent extends Component {
       }
     }
     return newData;
+  }
+
+  showEmotions = (emotion) => {
+    return emotions[emotion];
   }
 
   getDataFromObject = (datas) => {
@@ -35,9 +39,14 @@ class ListFaceComponent extends Component {
             </div>
           ) }
           { (data === 'Emotions') && datas[data].map((item, key) => (
-            <ListItem key={ key }>
-              <ListItemText primary={`Item ${item}`} />
-            </ListItem>
+            <div key={ key }>
+              <ListItem>
+                <ListItemText primary={`Estado ${ this.showEmotions(item.Type) }`} />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary={`Confidencialidad ${item.Confidence}`} />
+              </ListItem>
+            </div>
           )) }
           { (data === 'AgeRange') && (
             <ListItem>

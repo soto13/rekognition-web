@@ -2,6 +2,7 @@
   "name": "rekognition-web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://localhost:3000/web/",
   "dependencies": {
     "@material-ui/core": "^1.4.3",
     "@material-ui/icons": "^1.1.0",

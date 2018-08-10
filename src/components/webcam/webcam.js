@@ -1,5 +1,5 @@
 import { IconButton, withStyles } from "@material-ui/core";
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import { CloudUpload, PhotoCamera } from '@material-ui/icons';
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Webcam from 'react-webcam';
@@ -19,6 +19,19 @@ class WebcamComponent extends Component {
     this.props.onChange({ imageBase64: imageSrc });
   };
 
+  uploadPhoto = (e) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      const FR = new FileReader();
+      
+      FR.addEventListener("load", (e) => {
+        this.props.onChange({ imageBase64: e.target.result });
+      }); 
+      
+      FR.readAsDataURL( files[0] );
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const videoConstraints = { width: 1280, height: 720, facingMode: 'user', };
@@ -35,6 +48,14 @@ class WebcamComponent extends Component {
             <IconButton color='primary' className={ classes.button } onClick={ this.capture } >
               <PhotoCamera></PhotoCamera>
             </IconButton>
+          </div>
+          <div className='center-xs' >
+            <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={ (e) => this.uploadPhoto(e) } />
+            <label htmlFor="icon-button-file">
+              <IconButton color="primary" className={classes.button} component="span">
+                <CloudUpload/>
+              </IconButton>
+            </label>
           </div>
         </div>
       </div>

@@ -31,7 +31,7 @@ class ListFaceComponent extends Component {
           { (data !== 'Emotions') && (data !== 'AgeRange') && (
             <div>
               <ListItem>
-                <ListItemText primary={`${values[datas[data].Value]}`}> hola</ListItemText>
+                <ListItemText primary={`${values[datas[data].Value]}`}></ListItemText>
               </ListItem>
               <ListItem>
                 <ListItemText primary={`Confidencialidad ${datas[data].Confidence}%`} />

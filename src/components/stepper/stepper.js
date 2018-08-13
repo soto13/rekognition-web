@@ -14,10 +14,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import Webcam from "react-webcam";
+import { typeMobile } from '../../utils';
 import AlertDialogSlide from "../dialog/dialog";
 
 class Stepper extends React.Component {
-  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false, compareFacesResponse: {}, similarity: {}, openSnackBar: false, };
+  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false, compareFacesResponse: {}, similarity: {}, openSnackBar: false };
   
   handleNext = () => {
     this.setState(prevState => ({
@@ -62,7 +63,7 @@ class Stepper extends React.Component {
       const FR = new FileReader();
       
       FR.addEventListener("load", (e) => {
-        this.setState({ imageBase64: e.target.result })
+        this.setState({ imageBase64: e.target.result, percent: 0 })
       }); 
       
       FR.readAsDataURL( files[0] );
@@ -71,7 +72,7 @@ class Stepper extends React.Component {
 
   getStepContent = (step) => {
     const { classes } = this.props;
-    const { imageBase64, photo, openDialog } = this.state;
+    const { imageBase64, photo, openDialog, similarity } = this.state;
     const videoConstraints = { width: 1280, height: 720, facingMode: 'user', };
 
     localStorage.setItem('openDialog', openDialog)
@@ -102,7 +103,7 @@ class Stepper extends React.Component {
           <div key={step} >
             <div className='row' >
               <div className='col-xs-12' >
-                <Webcam audio={ false } width={ 600 } height={ 300 } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
+                <Webcam audio={ false } width={ (typeMobile() === 'MOBILE') ? 200 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
               </div>
             </div>
             <div className='row' >
@@ -113,6 +114,16 @@ class Stepper extends React.Component {
             <div className='row' >
               <div className='col-xs-12 col-sm-offset-3 col-sm-10' >
                 { photo && (<AlertDialogSlide sourceImage={ photo } targetImage={ imageBase64 } open={ openDialog } onChange={ (event) => this.getDataFromDialog(event) } />) }
+              </div>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div key={step} >
+            <div className='row' >
+              <div className='col-xs-12' >
+                <h1>{ (similarity.message) ? `El porcentaje es del ${similarity.message}` : 'No se encontraron datos para hacer la comparación' }</h1>
               </div>
             </div>
           </div>
@@ -210,6 +221,10 @@ const tutorialSteps = [
   },
   {
     label: 'Tómate una foto',
+    imgPath: '/static/images/steppers/2-work.jpg',
+  },
+  {
+    label: 'Resultado',
     imgPath: '/static/images/steppers/2-work.jpg',
   }
 ];

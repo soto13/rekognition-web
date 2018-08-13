@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { ListFaceComponent, WebcamComponent } from '../../../components';
 import { FACE_BASE64 } from '../../../endpoints';
+import { convertImage64ToFileInBase64, typeMobile } from '../../../utils';
 
 class FaceComponent extends Component {
 
@@ -16,20 +17,13 @@ class FaceComponent extends Component {
     this.setState({ imageBase64: event.imageBase64 })
   }
 
-  convertImage64ToFileInBase64 = () => {
-    const { imageBase64 } = this.state;
-    let fileBase64 = '';
-    fileBase64 = imageBase64.replace("data:image/jpeg;base64,", '');
-    return fileBase64;
-  }
-
   cleanImage = () => {
-    this.setState({ imageBase64: '' });
+    this.setState({ imageBase64: '', metadatas: [] });
   }
 
   getLabelsFromFace = () => {
     const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', };
-    const body = JSON.stringify({ image: this.convertImage64ToFileInBase64() })
+    const body = JSON.stringify({ image: convertImage64ToFileInBase64(this.state.imageBase64) })
     fetch(FACE_BASE64, { method: 'POST', headers, body })
       .then(res => res.json())
       .then((data) => {
@@ -71,21 +65,37 @@ class FaceComponent extends Component {
     const { imageBase64, metadatas } = this.state;
 
     return (
-      <div className='row'>
-        <div className='col-xs-8' >
-          <div className='center-xs' >
-            <h1>Tóma una foto de tu rostro</h1>
+      <div>
+        { (metadatas.length === 0) && (
+          <div className='row'>
+            <div className='col-xs-12' >
+              <div className='center-xs' >
+                <h1>Tóma una foto de tu rostro</h1>
+              </div>
+              <div className='center-xs' >
+                { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? 300 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
+                { imageBase64 && this.customCard() }
+              </div>
+            </div>
           </div>
-          <div className='center-xs' >
-            { !imageBase64 && (<WebcamComponent onChange={ (event) => this.getImageBase64(event) } />) }
-            { imageBase64 && this.customCard() }
+        )}
+        { (metadatas.length > 0) && (
+          <div className='row'>
+            <div className='col-xs-8' >
+              <div className='center-xs' >
+                <h1>Tóma una foto de tu rostro</h1>
+              </div>
+              <div className='center-xs' >
+                { this.customCard() }
+              </div>
+            </div>
+            <div className='col-xs-4'>
+              <div className='center-xs' >
+                <ListFaceComponent metadatas={ metadatas } />
+              </div>
+            </div>
           </div>
-        </div>
-        <div className='col-xs-4'>
-          <div className='center-xs' >
-            <ListFaceComponent metadatas={ metadatas } />
-          </div>
-        </div>
+        )}
       </div>
     )
   }
@@ -97,15 +107,6 @@ const styles = theme => ({
   },
   input: {
     display: 'none',
-  },
-  img: {
-    height: 255,
-    maxWidth: 400,
-    overflow: 'hidden',
-    width: '100%',
-  },
-  card: {
-    maxWidth: 345,
   },
 });
 

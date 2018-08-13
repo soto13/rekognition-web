@@ -4,7 +4,8 @@ import { DeleteForever, Send } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React, { Component } from "react";
 import { ListLabelComponent, WebcamComponent } from "../../../components";
-import { LABEL_BASE64 } from "../../../endpoints/index";
+import { LABEL_BASE64 } from "../../../endpoints";
+import { typeMobile } from '../../../utils';
 
 class LabelComponent extends Component {
   
@@ -79,7 +80,7 @@ class LabelComponent extends Component {
         { (labelsData.length === 0) && (
           <div className='row center-xs' >
             <div className='box' style={{ paddingTop: 26 }} >
-              { !imageBase64 && (<WebcamComponent onChange={ (event) => this.getImageBase64(event) } />) }
+              { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? 300 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
               { imageBase64 && this.customCard() }
             </div>
           </div>

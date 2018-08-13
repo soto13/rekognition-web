@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from "react";
 import { WebcamComponent } from '../../../components';
 import { TEXT_BASE64 } from '../../../endpoints';
+import { typeMobile } from '../../../utils';
 
 class TextComponent extends Component {
   constructor(props) {
@@ -42,7 +43,6 @@ class TextComponent extends Component {
     const { classes } = this.props;
     const { imageBase64 } = this.state;
     return (
-      <div className='row center-xs'>
         <Card className={classes.card}>
           <CardContent>
             <img className={ classes.img } src={imageBase64} alt='images' />
@@ -62,7 +62,6 @@ class TextComponent extends Component {
             </div>
           </CardActions>
         </Card>
-      </div>
     )
   }
 
@@ -70,13 +69,15 @@ class TextComponent extends Component {
     const { imageBase64 } = this.state;
     
     return (
-      <div className='row'>
-        <div className='col-xs-12 center-xs'>
+      <div className='row center-xs'>
+        <div className='col-xs-12'>
           <h1>Tóma o selecciona imágen de la cuál deseas obtener el texto</h1>
         </div>
-        <div className='col-xs-12 center-xs'>
-          { !imageBase64 && (<WebcamComponent onChange={ (event) => this.getImageBase64(event) } />) }
-          { imageBase64 && this.customCard() }
+        <div className='col-xs-12'>
+          <div className='box' >
+            { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? 300 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
+            { imageBase64 && this.customCard() }
+          </div>
         </div>
       </div>
     )
@@ -86,12 +87,6 @@ class TextComponent extends Component {
 const styles = (theme) => ({
   input: {
     display: 'none',
-  },
-  img: {
-    height: 255,
-    maxWidth: 400,
-    overflow: 'hidden',
-    width: '100%',
   },
 })
 

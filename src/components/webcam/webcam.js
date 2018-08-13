@@ -33,28 +33,26 @@ class WebcamComponent extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, width, height } = this.props;
     const videoConstraints = { width: 1280, height: 720, facingMode: 'user', };
 
     return (
-      <div className='row'>
+      <div className='row center-xs'>
         <div className='col-xs-12' >
-          <div className='center-xs' >
-            <Webcam audio={ false } width={ 600 } height={ 300 } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
-          </div>
+          <Webcam audio={ false } width={ width } height={ height } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
         </div>
         <div className='col-xs-12' >
-          <div className='center-xs' >
-            <Tooltip title="Tomar foto" enterDelay={300} leaveDelay={200}>
+          <div className='' >
+            <Tooltip title="Tomar foto" enterDelay={ 300 } leaveDelay={ 200 }>
               <IconButton color='primary' className={ classes.button } onClick={ this.capture } >
                 <PhotoCamera></PhotoCamera>
               </IconButton>
             </Tooltip>
           </div>
-          <div className='center-xs' >
+          <div className='' >
             <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={ (e) => this.uploadPhoto(e) } />
             <label htmlFor="icon-button-file">
-              <Tooltip title="Cargar desde galería" enterDelay={300} leaveDelay={200}>
+              <Tooltip title="Cargar desde galería" enterDelay={ 300 } leaveDelay={ 200 }>
                 <IconButton color="primary" className={classes.button} component="span">
                   <CloudUpload/>
                 </IconButton>

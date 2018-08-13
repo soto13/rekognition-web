@@ -1,110 +1,99 @@
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+import { Card, CardActions, CardContent, IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import { DeleteForever, Send } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React, { Component } from "react";
-import { DialogLabel } from "../../../components";
-import { ADD_OBJECT, CREATE_BUCKET, LABEL } from "../../../endpoints/index";
+import { ListLabelComponent, WebcamComponent } from "../../../components";
+import { LABEL_BASE64 } from "../../../endpoints/index";
 
 class LabelComponent extends Component {
   
   constructor(props) {
     super(props);
-    this.state = { imageBase64: '' }
+    this.state = { imageBase64: '', labelsData: [] }
   }
 
-  uploadPhoto = (e) => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      const FR = new FileReader();
-      
-      FR.addEventListener("load", (e) => {
-        this.setState({ imageBase64: e.target.result })
-      }); 
-      
-      FR.readAsDataURL( files[0] );
-    }
+  getImageBase64 = (event) => {
+    this.setState({ imageBase64: event.imageBase64 })
   }
 
-  createBucket = () => {
-    const bucketName = 'userfake2018';
-    const body = JSON.stringify({ bucketName });
+  convertImage64ToFileInBase64 = () => {
+    const { imageBase64 } = this.state;
+    let fileBase64 = '';
+    fileBase64 = imageBase64.replace("data:image/jpeg;base64,", '');
+    return fileBase64;
+  }
 
-    fetch(CREATE_BUCKET, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }, body })
+  getLabels = () => {
+    const body = JSON.stringify({ image: this.convertImage64ToFileInBase64() });
+    fetch(LABEL_BASE64, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body })
       .then((res) => res.json())
-      .then((bucket) => {
-        this.createObject(bucketName);
-        return bucket;
+      .then((labelsData) => {
+        this.setState({ labelsData: labelsData.Labels })
+        return labelsData;
       })
       .catch((err) => {
         return err;
       })
   }
 
-  createObject = (bucketName) => {
-    const photoName = 'user.jpg';
-    let imageBase64 = ''
-    imageBase64 = this.state.imageBase64;
-    imageBase64 = imageBase64.replace("data:image/jpeg;base64,", '');
-    const body = JSON.stringify({ bucketName, keyName: photoName, fileBase64: imageBase64, labels: {} });
-
-    fetch(ADD_OBJECT, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }, body })
-      .then((res) => res.json())
-      .then((object) => {
-        this.getLabels(bucketName, photoName);
-        return object;
-      })
-      .catch((err) => {
-        return err;
-      })
+  cleanImage = () => {
+    this.setState({ imageBase64: '', labelsData: [] })
   }
 
-  getLabels = (bucketName, photoName) => {
-    const body = JSON.stringify({ bucketName, photoName });
-    fetch(LABEL, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body })
-      .then((res) => res.json())
-      .then((labels) => {
-        this.setState({ labels })
-        return labels;
-      })
-      .catch((err) => {
-        return err;
-      })
+  customCard = () => {
+    const { classes } = this.props;
+    const { imageBase64 } = this.state;
+    return (
+      <div className='row center-xs'>
+        <div className='box'>
+          <Card className={classes.card}>
+            <CardContent>
+              <img className={ classes.img } src={imageBase64} alt='images' />
+            </CardContent>
+            <CardActions>
+              <div className='row'>
+                <div className='col-xs-offset-3 col-xs-2'>
+                  <IconButton color="primary" className={ classes.button } onClick={ this.cleanImage } component="span">
+                    <DeleteForever />
+                  </IconButton>
+                </div>
+                <div className='col-xs-offset-4 col-xs-2'>
+                  <IconButton color="primary" className={ classes.button } onClick={ this.getLabels } component="span">
+                    <Send />
+                  </IconButton>
+                </div>
+              </div>
+            </CardActions>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   render() {
-    const { classes } = this.props;
-    const { imageBase64, labels } = this.state;
+    const { imageBase64, labelsData } = this.state;
 
     return (
       <div>
-        <div className='row center-xs' >
-          <div className='box'>
-            <h1>Ver labels</h1>
+        { (labelsData.length === 0) && (
+          <div className='row center-xs' >
+            <div className='box' style={{ paddingTop: 26 }} >
+              { !imageBase64 && (<WebcamComponent onChange={ (event) => this.getImageBase64(event) } />) }
+              { imageBase64 && this.customCard() }
+            </div>
           </div>
-        </div>
-        <div className='row center-xs' >
-          <div className='box' >
-            { labels && (<DialogLabel labels={ labels } open={ true } />) }
-            { imageBase64 && (<Button variant="outlined" href="#outlined-buttons" className={ classes.button } onClick={ this.createBucket } >Comprobar resultados</Button>) }
+        )}
+        { (labelsData.length > 0) && (
+          <div className='row center-xs' >
+            <div className='col-xs-8' style={{ paddingTop: 26 }} >
+              { this.customCard() }
+            </div>
+            <div className='col-xs-4' style={{ paddingTop: 26 }} >
+              <ListLabelComponent labelsData={ labelsData } />
+            </div>
           </div>
-        </div>
-        <div className='row center-xs' >
-          <div className='box' >
-            { imageBase64 && (<img className={classes.img} src={imageBase64} alt='images' />) }
-          </div>
-        </div>
-        <div className='row center-xs' >
-          <div className='box' >
-            <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={ (e) => this.uploadPhoto(e) } />
-            <label htmlFor="icon-button-file">
-              <IconButton color="primary" className={classes.button} component="span">
-                <PhotoCamera />
-              </IconButton>
-            </label>
-          </div>
-        </div>
+        )}
       </div>
     )
   }

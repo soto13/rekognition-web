@@ -1,4 +1,4 @@
-import { IconButton, withStyles } from "@material-ui/core";
+import { IconButton, Tooltip, withStyles } from "@material-ui/core";
 import { CloudUpload, PhotoCamera } from '@material-ui/icons';
 import PropTypes from "prop-types";
 import React, { Component } from "react";
@@ -45,16 +45,20 @@ class WebcamComponent extends Component {
         </div>
         <div className='col-xs-12' >
           <div className='center-xs' >
-            <IconButton color='primary' className={ classes.button } onClick={ this.capture } >
-              <PhotoCamera></PhotoCamera>
-            </IconButton>
+            <Tooltip title="Tomar foto" enterDelay={300} leaveDelay={200}>
+              <IconButton color='primary' className={ classes.button } onClick={ this.capture } >
+                <PhotoCamera></PhotoCamera>
+              </IconButton>
+            </Tooltip>
           </div>
           <div className='center-xs' >
             <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={ (e) => this.uploadPhoto(e) } />
             <label htmlFor="icon-button-file">
-              <IconButton color="primary" className={classes.button} component="span">
-                <CloudUpload/>
-              </IconButton>
+              <Tooltip title="Cargar desde galería" enterDelay={300} leaveDelay={200}>
+                <IconButton color="primary" className={classes.button} component="span">
+                  <CloudUpload/>
+                </IconButton>
+              </Tooltip>
             </label>
           </div>
         </div>

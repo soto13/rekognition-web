@@ -64,7 +64,7 @@ class TextComponent extends Component {
         </Card>
       </div>
     )
-  } 
+  }
 
   render() {
     const { imageBase64 } = this.state;

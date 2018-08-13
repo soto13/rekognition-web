@@ -45,7 +45,7 @@ class TextComponent extends Component {
     return (
         <Card className={classes.card}>
           <CardContent>
-            <img className={ classes.img } src={imageBase64} alt='images' />
+            <img className={ classes.img } style={{ width: '100%', maxWidth: 400 }} src={imageBase64} alt='images' />
           </CardContent>
           <CardActions>
             <div className='row'>
@@ -75,7 +75,7 @@ class TextComponent extends Component {
         </div>
         <div className='col-xs-12'>
           <div className='box' >
-            { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? 300 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
+            { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? "100%" : "100%" } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
             { imageBase64 && this.customCard() }
           </div>
         </div>
@@ -88,6 +88,10 @@ const styles = (theme) => ({
   input: {
     display: 'none',
   },
+  img: {
+    width: "100%",
+    maxWidth: 400
+  }
 })
 
 TextComponent.propTypes = {

@@ -103,7 +103,7 @@ class Stepper extends React.Component {
           <div key={step} >
             <div className='row' >
               <div className='col-xs-12' >
-                <Webcam audio={ false } width={ (typeMobile() === 'MOBILE') ? 200 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
+                <Webcam audio={ false } width={ (typeMobile() === 'MOBILE') ? "100%" : "100%" } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } ref={ this.setRef } screenshotFormat="image/jpeg" videoConstraints={ videoConstraints } />
               </div>
             </div>
             <div className='row' >

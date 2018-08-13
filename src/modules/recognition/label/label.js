@@ -80,17 +80,17 @@ class LabelComponent extends Component {
         { (labelsData.length === 0) && (
           <div className='row center-xs' >
             <div className='box' style={{ paddingTop: 26 }} >
-              { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? 300 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
+              { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? "100%" : "100%" } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
               { imageBase64 && this.customCard() }
             </div>
           </div>
         )}
         { (labelsData.length > 0) && (
           <div className='row center-xs' >
-            <div className='col-xs-8' style={{ paddingTop: 26 }} >
+            <div className='col-xs-12 col-sm-8' style={{ paddingTop: 26 }} >
               { this.customCard() }
             </div>
-            <div className='col-xs-4' style={{ paddingTop: 26 }} >
+            <div className='col-xs-12 col-sm-4' style={{ paddingTop: 26 }} >
               <ListLabelComponent labelsData={ labelsData } />
             </div>
           </div>
@@ -106,6 +106,10 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  img: {
+    width: "100%",
+    maxWidth: 400
+  }
 });
 
 LabelComponent.propTypes = {

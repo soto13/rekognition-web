@@ -14,6 +14,7 @@ class FaceComponent extends Component {
   }
 
   getImageBase64 = (event) => {
+    convertImage64ToFileInBase64(event.imageBase64)
     this.setState({ imageBase64: event.imageBase64 })
   }
 
@@ -27,6 +28,7 @@ class FaceComponent extends Component {
     fetch(FACE_BASE64, { method: 'POST', headers, body })
       .then(res => res.json())
       .then((data) => {
+        console.log(data)
         this.setState({ metadatas: data.FaceDetails })
         return data;
       })
@@ -73,7 +75,7 @@ class FaceComponent extends Component {
                 <h1>Tóma una foto de tu rostro</h1>
               </div>
               <div className='center-xs' >
-                { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? 300 : 600 } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
+                { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? "100%" : "100%" } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
                 { imageBase64 && this.customCard() }
               </div>
             </div>
@@ -81,7 +83,7 @@ class FaceComponent extends Component {
         )}
         { (metadatas.length > 0) && (
           <div className='row'>
-            <div className='col-xs-8' >
+            <div className='col-xs-12 col-sm-8' >
               <div className='center-xs' >
                 <h1>Tóma una foto de tu rostro</h1>
               </div>
@@ -89,7 +91,7 @@ class FaceComponent extends Component {
                 { this.customCard() }
               </div>
             </div>
-            <div className='col-xs-4'>
+            <div className='col-xs-12 col-sm-4' style={{ paddingTop: 20 }} >
               <div className='center-xs' >
                 <ListFaceComponent metadatas={ metadatas } />
               </div>
@@ -108,6 +110,10 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  img: {
+    width: "100%",
+    maxWidth: 400
+  }
 });
 
 FaceComponent.propTypes = {

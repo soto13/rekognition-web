@@ -2,18 +2,14 @@ import { Card, CardActions, CardContent, IconButton, withStyles } from "@materia
 import { DeleteForever, Send } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React, { Component } from "react";
-import { WebcamComponent } from '../../../components';
+import { ListTextComponent, WebcamComponent } from '../../../components';
 import { TEXT_BASE64 } from '../../../endpoints';
 import { convertImage64ToFileInBase64, typeMobile } from '../../../utils';
 
 class TextComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { imageBase64: '' }
-  }
-
-  cleanImage = () => {
-    this.setState({ imageBase64: '' });
+    this.state = { imageBase64: '', textDetected: [] }
   }
 
   getImageBase64 = (event) => {
@@ -26,19 +22,24 @@ class TextComponent extends Component {
     fetch(TEXT_BASE64, { method: 'POST', headers, body })
       .then(res => res.json())
       .then((data) => {
-        console.log(data.TextDetections[0], data.TextDetections[3], data.TextDetections[5], data.TextDetections[6], data.TextDetections[7]);
+        this.setState({ textDetected: data.TextDetections })
         return data;
       })
       .catch(err => console.log(err));
+  }
+
+  cleanImage = () => {
+    this.setState({ imageBase64: '', textDetected: [] });
   }
 
   customCard = () => {
     const { classes } = this.props;
     const { imageBase64 } = this.state;
     return (
+      <div className='row center-xs'>
         <Card className={classes.card}>
           <CardContent>
-            <img className={ classes.img } style={{ width: '100%', maxWidth: 400 }} src={imageBase64} alt='images' />
+            <img className={ classes.img } src={ imageBase64 } alt='images' />
           </CardContent>
           <CardActions>
             <div className='row'>
@@ -55,23 +56,43 @@ class TextComponent extends Component {
             </div>
           </CardActions>
         </Card>
+      </div>
     )
   }
 
   render() {
-    const { imageBase64 } = this.state;
+    const { imageBase64, textDetected } = this.state;
+    const textData = (textDetected.length > 0) ?
+      [textDetected[0], textDetected[3], textDetected[5], textDetected[6], textDetected[7]] : [];
     
     return (
-      <div className='row center-xs'>
-        <div className='col-xs-12'>
-          <h1>Tóma o selecciona imágen de la cuál deseas obtener el texto</h1>
-        </div>
-        <div className='col-xs-12'>
-          <div className='box' >
-            { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? "100%" : "100%" } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
-            { imageBase64 && this.customCard() }
+      <div>
+        { (textDetected.length === 0) && (
+          <div className='row center-xs'>
+            <div className='col-xs-12'>
+              <h1>Tóma o selecciona imágen de la cuál deseas obtener el texto</h1>
+            </div>
+            <div className='col-xs-12'>
+              <div className='center-xs' >
+                { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? "100%" : "100%" } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
+                { imageBase64 && this.customCard() }
+              </div>
+            </div>
           </div>
-        </div>
+        )}
+        { textDetected.length > 0 && (
+          <div className='row center-xs'>
+            <div className='col-xs-12 col-sm-8'>
+              <h1>Tóma o selecciona imágen de la cuál deseas obtener el texto</h1>
+              { this.customCard() }
+            </div>
+            <div className='col-xs-12 col-sm-4'>
+              <div className='center-xs' >
+                <ListTextComponent textData={ textData } />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }

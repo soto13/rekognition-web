@@ -9,15 +9,14 @@ const convertImage64ToFileInBase64 = (imageBase64) => {
   const jpg = 'image/jpg';
   const jpeg = 'image/jpeg';
   let fileBase64 = '';
-  fileBase64 = imageBase64.replace("data:image/jpeg;base64,", '');
-  if (imageBase64.indexOf(jpg) === -1) {
-    console.log('jpg', imageBase64)
+  if (imageBase64.indexOf(jpg) === 5) {
+    fileBase64 = imageBase64.replace("data:image/jpg;base64,", '');
   }
-  if (imageBase64.indexOf(jpeg) === -1) {
-    console.log('jpeg')
+  if (imageBase64.indexOf(jpeg) === 5) {
+    fileBase64 = imageBase64.replace("data:image/jpeg;base64,", '');
   }
-  if (imageBase64.indexOf(png) === -1) {
-    console.log('png')
+  if (imageBase64.indexOf(png) === 5) {
+    fileBase64 = imageBase64.replace("data:image/png;base64,", '');
   }
   return fileBase64;
 }

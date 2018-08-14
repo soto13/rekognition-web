@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from "react";
 import { WebcamComponent } from '../../../components';
 import { TEXT_BASE64 } from '../../../endpoints';
-import { typeMobile } from '../../../utils';
+import { convertImage64ToFileInBase64, typeMobile } from '../../../utils';
 
 class TextComponent extends Component {
   constructor(props) {
@@ -20,16 +20,9 @@ class TextComponent extends Component {
     this.setState({ imageBase64: event.imageBase64 })
   }
 
-  convertImage64ToFileInBase64 = () => {
-    const { imageBase64 } = this.state;
-    let fileBase64 = '';
-    fileBase64 = imageBase64.replace("data:image/jpeg;base64,", '');
-    return fileBase64;
-  }
-
   getLabelsFromText = () => {
     const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', };
-    const body = JSON.stringify({ image: this.convertImage64ToFileInBase64() })
+    const body = JSON.stringify({ image: convertImage64ToFileInBase64(this.state.imageBase64) })
     fetch(TEXT_BASE64, { method: 'POST', headers, body })
       .then(res => res.json())
       .then((data) => {

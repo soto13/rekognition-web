@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { COMPARE_FACES_BASE64 } from "../../endpoints";
+import { convertImage64ToFileInBase64 } from '../../utils';
 
 class AlertDialogSlide extends React.Component {
   constructor(props) {
@@ -47,8 +48,8 @@ class AlertDialogSlide extends React.Component {
     let imageTarget = '';
     imageSource = sourceImage;
     imageTarget = targetImage;
-    imageSource = imageSource.replace("data:image/jpeg;base64,", '');
-    imageTarget = imageTarget.replace("data:image/jpeg;base64,", '');
+    imageSource = convertImage64ToFileInBase64(imageSource);
+    imageTarget = convertImage64ToFileInBase64(imageTarget);
 
     // console.log(imageSource, imageTarget)
     this.compareFaces(imageSource, imageTarget);

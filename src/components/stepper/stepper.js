@@ -123,7 +123,7 @@ class Stepper extends React.Component {
           <div key={step} >
             <div className='row' >
               <div className='col-xs-12' >
-                <h1>{ (similarity.message) ? `El porcentaje es del ${similarity.message}` : 'No se encontraron datos para hacer la comparación' }</h1>
+                <h1>{ (similarity.message) ? similarity.message : 'No se encontraron datos para hacer la comparación' }</h1>
               </div>
             </div>
           </div>

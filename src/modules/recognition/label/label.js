@@ -3,36 +3,32 @@ import { withStyles } from '@material-ui/core/styles';
 import { DeleteForever, Send } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React, { Component } from "react";
-import { ListLabelComponent, WebcamComponent } from "../../../components";
-import { LABEL_BASE64 } from "../../../endpoints/index";
+import { LinearQueryComponent, ListLabelComponent, WebcamComponent } from "../../../components";
+import { LABEL_BASE64 } from "../../../endpoints";
+import { convertImage64ToFileInBase64, typeMobile } from '../../../utils';
 
 class LabelComponent extends Component {
   
   constructor(props) {
     super(props);
-    this.state = { imageBase64: '', labelsData: [] }
+    this.state = { imageBase64: '', labelsData: [], showLinear: false }
   }
 
   getImageBase64 = (event) => {
     this.setState({ imageBase64: event.imageBase64 })
   }
 
-  convertImage64ToFileInBase64 = () => {
-    const { imageBase64 } = this.state;
-    let fileBase64 = '';
-    fileBase64 = imageBase64.replace("data:image/jpeg;base64,", '');
-    return fileBase64;
-  }
-
   getLabels = () => {
-    const body = JSON.stringify({ image: this.convertImage64ToFileInBase64() });
+    this.setState({ showLinear: true });
+    const body = JSON.stringify({ image: convertImage64ToFileInBase64(this.state.imageBase64) });
     fetch(LABEL_BASE64, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body })
       .then((res) => res.json())
       .then((labelsData) => {
-        this.setState({ labelsData: labelsData.Labels })
+        this.setState({ labelsData: labelsData.Labels, showLinear: false })
         return labelsData;
       })
       .catch((err) => {
+        this.setState({ showLinear: false })
         return err;
       })
   }
@@ -43,7 +39,7 @@ class LabelComponent extends Component {
 
   customCard = () => {
     const { classes } = this.props;
-    const { imageBase64 } = this.state;
+    const { imageBase64, showLinear } = this.state;
     return (
       <div className='row center-xs'>
         <div className='box'>
@@ -51,20 +47,22 @@ class LabelComponent extends Component {
             <CardContent>
               <img className={ classes.img } src={imageBase64} alt='images' />
             </CardContent>
-            <CardActions>
-              <div className='row'>
-                <div className='col-xs-offset-3 col-xs-2'>
-                  <IconButton color="primary" className={ classes.button } onClick={ this.cleanImage } component="span">
-                    <DeleteForever />
-                  </IconButton>
+            { !showLinear && (
+              <CardActions>
+                <div className='row'>
+                  <div className='col-xs-offset-3 col-xs-2'>
+                    <IconButton color="primary" className={ classes.button } onClick={ this.cleanImage } component="span">
+                      <DeleteForever />
+                    </IconButton>
+                  </div>
+                  <div className='col-xs-offset-4 col-xs-2'>
+                    <IconButton color="primary" className={ classes.button } onClick={ this.getLabels } component="span">
+                      <Send />
+                    </IconButton>
+                  </div>
                 </div>
-                <div className='col-xs-offset-4 col-xs-2'>
-                  <IconButton color="primary" className={ classes.button } onClick={ this.getLabels } component="span">
-                    <Send />
-                  </IconButton>
-                </div>
-              </div>
-            </CardActions>
+              </CardActions>
+            ) }
           </Card>
         </div>
       </div>
@@ -72,24 +70,25 @@ class LabelComponent extends Component {
   }
 
   render() {
-    const { imageBase64, labelsData } = this.state;
+    const { imageBase64, labelsData, showLinear } = this.state;
 
     return (
       <div>
+        { showLinear && (<LinearQueryComponent/>) }
         { (labelsData.length === 0) && (
           <div className='row center-xs' >
             <div className='box' style={{ paddingTop: 26 }} >
-              { !imageBase64 && (<WebcamComponent onChange={ (event) => this.getImageBase64(event) } />) }
+              { !imageBase64 && (<WebcamComponent width={ (typeMobile() === 'MOBILE') ? "100%" : "100%" } height={ (typeMobile() === 'MOBILE') ? 300 : 300 } onChange={ (event) => this.getImageBase64(event) } />) }
               { imageBase64 && this.customCard() }
             </div>
           </div>
         )}
         { (labelsData.length > 0) && (
           <div className='row center-xs' >
-            <div className='col-xs-8' style={{ paddingTop: 26 }} >
+            <div className='col-xs-12 col-sm-8' style={{ paddingTop: 26 }} >
               { this.customCard() }
             </div>
-            <div className='col-xs-4' style={{ paddingTop: 26 }} >
+            <div className='col-xs-12 col-sm-4' style={{ paddingTop: 26 }} >
               <ListLabelComponent labelsData={ labelsData } />
             </div>
           </div>
@@ -105,6 +104,10 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  img: {
+    width: "100%",
+    maxWidth: 400
+  }
 });
 
 LabelComponent.propTypes = {

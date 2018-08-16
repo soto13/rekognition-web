@@ -1,7 +1,7 @@
 import { List, ListItem, ListItemText, ListSubheader, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { emotions, identifierData, values } from '../../../utils';
+import { emotions, getPercent, identifierData, values } from '../../../utils';
 
 class ListFaceComponent extends Component {
   
@@ -34,7 +34,7 @@ class ListFaceComponent extends Component {
                 <ListItemText primary={`${values[datas[data].Value]}`}></ListItemText>
               </ListItem>
               <ListItem>
-                <ListItemText primary={`Confidencialidad ${datas[data].Confidence}%`} />
+                <ListItemText primary={`Confidencialidad del ${getPercent(datas[data].Confidence)} porciento`} />
               </ListItem>
             </div>
           ) }
@@ -44,7 +44,7 @@ class ListFaceComponent extends Component {
                 <ListItemText primary={`Estado ${ this.showEmotions(item.Type) }`} />
               </ListItem>
               <ListItem>
-                <ListItemText primary={`Confidencialidad ${item.Confidence}`} />
+                <ListItemText primary={`Confidencialidad del ${getPercent(item.Confidence)} porciento`} />
               </ListItem>
             </div>
           )) }
@@ -63,7 +63,6 @@ class ListFaceComponent extends Component {
   showDataList = () => {
     const { classes } = this.props;
     const { metadatas } = this.props;
-    console.log(metadatas);
     
     return metadatas.map((datas, sectionId) => (
       <li key={ sectionId } className={ classes.listSection }>

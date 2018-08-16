@@ -38,6 +38,7 @@ class AlertDialogSlide extends React.Component {
         return faceCompared;
       })
       .catch((err) => {
+        this.props.onChange({ compareFaces: [], similarity: { message: 'Ha ocurrido un error', detail: [] } })
         return err;
       })
   }
@@ -54,6 +55,7 @@ class AlertDialogSlide extends React.Component {
     // console.log(imageSource, imageTarget)
     this.compareFaces(imageSource, imageTarget);
     this.setState({ open: false, sourceImage: imageSource, targetImage, imageTarget });
+    this.props.onChange({ showLinear: true });
   }
     
   render() {

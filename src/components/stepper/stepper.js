@@ -16,9 +16,10 @@ import SwipeableViews from 'react-swipeable-views';
 import Webcam from "react-webcam";
 import { typeMobile } from '../../utils';
 import AlertDialogSlide from "../dialog/dialog";
+import LinearQueryComponent from '../linear-query/linear-query';
 
 class Stepper extends React.Component {
-  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false, compareFacesResponse: {}, similarity: {}, openSnackBar: false };
+  state = { activeStep: 0, imageBase64: '', photo: '', video: '', openDialog: false, compareFacesResponse: {}, similarity: {}, openSnackBar: false, showLinear: false };
   
   handleNext = () => {
     this.setState(prevState => ({
@@ -134,8 +135,12 @@ class Stepper extends React.Component {
   }
 
   getDataFromDialog = (event) => {
-    this.handleClick()
-    this.setState({ compareFacesResponse: event.compareFaces, similarity: event.similarity })
+    if (event.showLinear) {
+      this.setState({ showLinear: event.showLinear });
+    } else {
+      this.handleClick()
+      this.setState({ compareFacesResponse: event.compareFaces, similarity: event.similarity, showLinear: false })
+    }
   }
 
   LongTextSnackbar = () => {
@@ -174,12 +179,13 @@ class Stepper extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-    const { activeStep } = this.state;
+    const { activeStep, showLinear } = this.state;
     
     const maxSteps = tutorialSteps.length;
     
     return (
       <div className='container-body' >
+        { showLinear && (<LinearQueryComponent/>) }
         <div className='row' >
           <div className='col-xs-12 col-sm-offset-3 col-sm-6' >
             <Paper square elevation={0} className={classes.header}>

@@ -2,14 +2,14 @@ import { Card, CardActions, CardContent, IconButton, withStyles } from "@materia
 import { DeleteForever, Send } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React, { Component } from "react";
-import { ListTextComponent, WebcamComponent } from '../../../components';
+import { LinearQueryComponent, ListTextComponent, WebcamComponent } from '../../../components';
 import { TEXT_BASE64 } from '../../../endpoints';
 import { convertImage64ToFileInBase64, typeMobile } from '../../../utils';
 
 class TextComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { imageBase64: '', textDetected: [] }
+    this.state = { imageBase64: '', textDetected: [], showLinear: false }
   }
 
   getImageBase64 = (event) => {
@@ -17,15 +17,19 @@ class TextComponent extends Component {
   }
 
   getLabelsFromText = () => {
+    this.setState({ showLinear: true });
     const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', };
     const body = JSON.stringify({ image: convertImage64ToFileInBase64(this.state.imageBase64) })
     fetch(TEXT_BASE64, { method: 'POST', headers, body })
       .then(res => res.json())
       .then((data) => {
-        this.setState({ textDetected: data.TextDetections })
+        this.setState({ textDetected: data.TextDetections, showLinear: false })
         return data;
       })
-      .catch(err => console.log(err));
+      .catch((err) => {
+        console.log(err)
+        this.setState({ showLinear: false });
+      });
   }
 
   cleanImage = () => {
@@ -34,39 +38,42 @@ class TextComponent extends Component {
 
   customCard = () => {
     const { classes } = this.props;
-    const { imageBase64 } = this.state;
+    const { imageBase64, showLinear } = this.state;
     return (
       <div className='row center-xs'>
         <Card className={classes.card}>
           <CardContent>
             <img className={ classes.img } src={ imageBase64 } alt='images' />
           </CardContent>
-          <CardActions>
-            <div className='row'>
-              <div className='col-xs-offset-3 col-xs-2'>
-                <IconButton color="primary" className={ classes.button } onClick={ this.cleanImage } component="span">
-                  <DeleteForever />
-                </IconButton>
+          { !showLinear && (
+            <CardActions>
+              <div className='row'>
+                <div className='col-xs-offset-3 col-xs-2'>
+                  <IconButton color="primary" className={ classes.button } onClick={ this.cleanImage } component="span">
+                    <DeleteForever />
+                  </IconButton>
+                </div>
+                <div className='col-xs-offset-4 col-xs-2'>
+                  <IconButton color="primary" className={ classes.button } onClick={ this.getLabelsFromText } component="span">
+                    <Send />
+                  </IconButton>
+                </div>
               </div>
-              <div className='col-xs-offset-4 col-xs-2'>
-                <IconButton color="primary" className={ classes.button } onClick={ this.getLabelsFromText } component="span">
-                  <Send />
-                </IconButton>
-              </div>
-            </div>
-          </CardActions>
+            </CardActions>
+          ) }
         </Card>
       </div>
     )
   }
 
   render() {
-    const { imageBase64, textDetected } = this.state;
+    const { imageBase64, textDetected, showLinear } = this.state;
     const textData = (textDetected.length > 0) ?
       [textDetected[0], textDetected[3], textDetected[5], textDetected[6], textDetected[7]] : [];
     
     return (
       <div>
+        { showLinear && (<LinearQueryComponent/>) }
         { (textDetected.length === 0) && (
           <div className='row center-xs'>
             <div className='col-xs-12'>

@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { DeleteForever, Send } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React, { Component } from "react";
-import { ListLabelComponent, WebcamComponent } from "../../../components";
+import { LinearQueryComponent, ListLabelComponent, WebcamComponent } from "../../../components";
 import { LABEL_BASE64 } from "../../../endpoints";
 import { convertImage64ToFileInBase64, typeMobile } from '../../../utils';
 
@@ -11,7 +11,7 @@ class LabelComponent extends Component {
   
   constructor(props) {
     super(props);
-    this.state = { imageBase64: '', labelsData: [] }
+    this.state = { imageBase64: '', labelsData: [], showLinear: false }
   }
 
   getImageBase64 = (event) => {
@@ -19,14 +19,16 @@ class LabelComponent extends Component {
   }
 
   getLabels = () => {
+    this.setState({ showLinear: true });
     const body = JSON.stringify({ image: convertImage64ToFileInBase64(this.state.imageBase64) });
     fetch(LABEL_BASE64, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body })
       .then((res) => res.json())
       .then((labelsData) => {
-        this.setState({ labelsData: labelsData.Labels })
+        this.setState({ labelsData: labelsData.Labels, showLinear: false })
         return labelsData;
       })
       .catch((err) => {
+        this.setState({ showLinear: false })
         return err;
       })
   }
@@ -37,7 +39,7 @@ class LabelComponent extends Component {
 
   customCard = () => {
     const { classes } = this.props;
-    const { imageBase64 } = this.state;
+    const { imageBase64, showLinear } = this.state;
     return (
       <div className='row center-xs'>
         <div className='box'>
@@ -45,20 +47,22 @@ class LabelComponent extends Component {
             <CardContent>
               <img className={ classes.img } src={imageBase64} alt='images' />
             </CardContent>
-            <CardActions>
-              <div className='row'>
-                <div className='col-xs-offset-3 col-xs-2'>
-                  <IconButton color="primary" className={ classes.button } onClick={ this.cleanImage } component="span">
-                    <DeleteForever />
-                  </IconButton>
+            { !showLinear && (
+              <CardActions>
+                <div className='row'>
+                  <div className='col-xs-offset-3 col-xs-2'>
+                    <IconButton color="primary" className={ classes.button } onClick={ this.cleanImage } component="span">
+                      <DeleteForever />
+                    </IconButton>
+                  </div>
+                  <div className='col-xs-offset-4 col-xs-2'>
+                    <IconButton color="primary" className={ classes.button } onClick={ this.getLabels } component="span">
+                      <Send />
+                    </IconButton>
+                  </div>
                 </div>
-                <div className='col-xs-offset-4 col-xs-2'>
-                  <IconButton color="primary" className={ classes.button } onClick={ this.getLabels } component="span">
-                    <Send />
-                  </IconButton>
-                </div>
-              </div>
-            </CardActions>
+              </CardActions>
+            ) }
           </Card>
         </div>
       </div>
@@ -66,10 +70,11 @@ class LabelComponent extends Component {
   }
 
   render() {
-    const { imageBase64, labelsData } = this.state;
+    const { imageBase64, labelsData, showLinear } = this.state;
 
     return (
       <div>
+        { showLinear && (<LinearQueryComponent/>) }
         { (labelsData.length === 0) && (
           <div className='row center-xs' >
             <div className='box' style={{ paddingTop: 26 }} >

@@ -68,7 +68,7 @@ class AppBars extends Component {
 				<AppBar position="static" className={classes.backgroundColor} >
 					<Toolbar>
             <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={this.toggleDrawer('left', true)} ><MenuIcon /></IconButton>
-						<Typography variant="title" color="inherit" className={classes.flex}><Link className={ classes.link } style={{ textDecoration: 'none' }} title='Compañías' to="/">{ title }</Link></Typography>
+						<Typography variant="title" color="inherit" className={classes.flex}><Link className={ classes.link } style={{ textDecoration: 'none' }} title='Compañías' to="/web">{ title }</Link></Typography>
 						<Button color="inherit" >Recognition</Button>
 					</Toolbar>
 				</AppBar>
@@ -76,7 +76,7 @@ class AppBars extends Component {
 				<Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
           <div tabIndex={ 0 } role="button" >
 						<List component="nav" subheader={<ListSubheader component="div">Opciones para navegar</ListSubheader>} >
-							<Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Comparar Caras' to="/recognition/compare-faces">
+							<Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Comparar Caras' to="/web/recognition/compare-faces">
 								<ListItem button onClick={this.toggleDrawer('left', false)} >
 									<ListItemIcon>
 										<Icon>featured_play_list</Icon>
@@ -85,7 +85,7 @@ class AppBars extends Component {
 								</ListItem>
 							</Link>
 
-              <Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Ver Labels' to="/recognition/label">
+              <Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Ver Labels' to="/web/recognition/label">
                 <ListItem button onClick={this.toggleDrawer('left', false)} >
                   <ListItemIcon>
                     <Icon>location_city</Icon>
@@ -94,7 +94,7 @@ class AppBars extends Component {
                 </ListItem>
               </Link>
 
-              <Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Ver Texto' to="/recognition/text">
+              <Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Ver Texto' to="/web/recognition/text">
                 <ListItem button onClick={this.toggleDrawer('left', false)} >
                   <ListItemIcon>
                     <Icon>people</Icon>
@@ -103,7 +103,7 @@ class AppBars extends Component {
                 </ListItem>
               </Link>
 
-              <Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Ver Cara' to="/recognition/face">
+              <Link className={ classes.linkMenu } style={{ textDecoration: 'none' }} title='Ver Cara' to="/web/recognition/face">
                 <ListItem button onClick={this.toggleDrawer('left', false)} >
                   <ListItemIcon>
                     <Icon>people</Icon>

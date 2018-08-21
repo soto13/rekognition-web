@@ -12,10 +12,11 @@ const Main = () => (
   <main>
     <Switch>
       <Route exact path='/' component={ MainModule } />
-      <Route exact path='/recognition/compare-faces' component={ CompareFacesComponent } />
-      <Route exact path='/recognition/face' component={ FaceComponent } />
-      <Route exact path='/recognition/label' component={ LabelComponent } />
-      <Route exact path='/recognition/text' component={ TextComponent } />
+      <Route exact path='/web' component={ MainModule } />
+      <Route exact path='/web/recognition/compare-faces' component={ CompareFacesComponent } />
+      <Route exact path='/web/recognition/face' component={ FaceComponent } />
+      <Route exact path='/web/recognition/label' component={ LabelComponent } />
+      <Route exact path='/web/recognition/text' component={ TextComponent } />
 
       <Route exact path='/bucket/buckets' component={ BucketComponent } />
       <Route exact path='/bucket/objects' component={ ObjectComponent } />

@@ -1,5 +1,5 @@
-// const path = 'http://localhost:3000/api/';
-const path = 'http://192.168.1.10:3000/api/';
+const path = 'http://rekognition.cloud.ollpay.com/api/';
+// const path = 'http://192.168.1.10:3000/api/';
 const rekognition = `${path}awsrekognition/`;
 const s3 = `${path}amazon-s3/`;
 
